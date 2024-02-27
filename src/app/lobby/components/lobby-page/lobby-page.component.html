@@ -1,0 +1,6 @@
+<div *ngIf="socketGameData == null; else joined">
+  <app-join-lobby />
+</div>
+<ng-template #joined>
+  <app-lobby />
+</ng-template>

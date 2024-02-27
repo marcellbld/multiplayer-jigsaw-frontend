@@ -1,0 +1,22 @@
+<mat-toolbar class="navbar">
+  <a mat-fab extended color="primary" [routerLink]="['/lobby']">
+    <mat-icon>home</mat-icon>
+    Lobby
+  </a>
+  <span class="spacer"></span>
+  <ng-template [ngIf]="isLoggedIn()" [ngIfElse]="loggedOut">
+    <button mat-button color="primary" (click)="logout()">Logout</button>
+  </ng-template>
+  <ng-template #loggedOut>
+    <a mat-raised-button color="primary" [routerLink]="['/login']" routerLinkActive="router-link-active">Login</a>
+    <a mat-raised-button color="primary" [routerLink]="['/registration']" routerLinkActive="router-link-active">Registration</a>
+  </ng-template>
+  <div class="theme-control">
+    <mat-slide-toggle checked (click)="toggleTheme()"></mat-slide-toggle>
+    @if (themeService.themeSignal() === 'dark') {
+      <mat-icon>bedtime</mat-icon>
+    } @else {
+      <mat-icon>brightness_5</mat-icon>
+    }
+  </div>
+</mat-toolbar>

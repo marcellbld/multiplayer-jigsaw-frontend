@@ -1,0 +1,43 @@
+<!-- <div *ngIf="room && room.id">
+  <p>Room {{room.id}}</p>
+
+  <ul>
+    <li *ngFor="let user of room.users">
+      <div [style.color]="user.getColor()">
+        {{user.username}}
+      </div>
+    </li>
+  </ul>
+</div> -->
+<div id="info-panel-container" class="unclickable">
+  <div id="info-panel">
+    <div id="player-list">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Players
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul>
+            <li *ngFor="let user of room.users">
+              <div [style.color]="user.getColor()">
+                {{user.username}}
+              </div>
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <span class="spacer"></span>
+    <div id="action-panel" class="clickable">
+      <button mat-mini-fab color="primary" (click)="zoomOut()">
+        <mat-icon>zoom_out</mat-icon>
+      </button>
+      <button mat-mini-fab color="primary" (click)="zoomIn()">
+        <mat-icon>zoom_in</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<app-game-board id="gameBoard" #gameBoard></app-game-board>

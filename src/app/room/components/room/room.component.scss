@@ -1,0 +1,53 @@
+:host {
+  height: 100%;
+  width: 100%;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+#info-panel-container {
+  position: fixed;
+  width:100%;
+}
+
+#info-panel {
+  display: flex;
+  flex-direction: row;
+  padding: 25px;
+}
+
+#player-list {
+  display: flex;
+  flex-direction: column;
+
+  mat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    list-style-type: none;
+    margin-top: 5px;
+  }
+}
+
+#action-panel {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.unclickable {
+  pointer-events: none;  
+}
+
+.clickable {
+  pointer-events: initial;  
+}

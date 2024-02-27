@@ -1,0 +1,12 @@
+<mat-toolbar class="navbar">
+  <button mat-raised-button (click)="clickOnBackBtn()">
+    Back
+  </button>
+  <span class="spacer"></span>
+  <div id="username-panel">
+    {{socketGameData?.username}}
+  </div>
+  <button mat-raised-button (click)="clickOnCreateRoomBtn()">
+    Create Room
+  </button>
+</mat-toolbar>

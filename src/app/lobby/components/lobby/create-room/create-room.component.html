@@ -1,0 +1,53 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Create room</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form" (submit)="onSubmit()" class="container">
+      <mat-form-field appearance="fill">
+        <mat-label for="pieces">Pieces</mat-label>
+        <input matInput placeholder="" type="number"
+        formControlName="pieces" id="pieces" name="pieces"
+        [class.is-invalid]="(pieces.touched && pieces.errors)">
+      
+        @if (pieces.touched && (pieces.hasError('min') || userCapacity.hasError('max'))) {
+          <mat-error>Pieces must be between 20 and 1000</mat-error>
+        }
+      </mat-form-field>
+      
+      <mat-form-field appearance="fill">
+        <mat-label for="userCapacity">User Capacity</mat-label>
+        <input matInput placeholder="" type="number"
+        formControlName="userCapacity" id="userCapacity" name="userCapacity"
+        [class.is-invalid]="(userCapacity.touched && userCapacity.errors)">
+      
+        @if (userCapacity.touched && (userCapacity.hasError('min') || userCapacity.hasError('max'))) {
+          <mat-error>User Capacity must be between 1 and 5</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="flex-column">
+        <div appearance="fill">
+          <mat-label for="puzzleImage">Puzzle Image</mat-label>
+          <div *ngIf="this.puzzleImageFile">
+            <img [src]="this.getUploadedImage()" class="m-auto d-block img-fluid"  style="height: 10rem;"/>
+          </div>
+            <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+            <input hidden (change)="uploadImage($event)" #fileInput type="file" id="puzzleImage" name="puzzleImage">
+          </div>
+
+          @if (puzzleImage.touched && puzzleImage.hasError('required')) {
+            <mat-error>Puzzle Image is required</mat-error>
+          }
+          @if (conversionError) {
+            <mat-error>{{conversionError}}</mat-error>
+          }
+          @if (submitError) {
+            <mat-error>{{submitError}}</mat-error>
+          }
+      </div>
+      <button mat-raised-button color="primary" type="submit">Create</button>
+    </form>
+  </mat-card-content>
+</mat-card>
+  

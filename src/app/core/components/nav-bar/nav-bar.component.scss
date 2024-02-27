@@ -1,0 +1,29 @@
+.navbar {
+  position: fixed;
+  height: 65px;
+  z-index: 200;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.router-link-active {
+  color:darkgray !important;
+  pointer-events: none;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  justify-content: space-between;
+  padding: 0 2rem;
+
+  .theme-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+  }
+}
