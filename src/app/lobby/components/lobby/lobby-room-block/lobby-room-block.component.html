@@ -3,7 +3,10 @@
     <mat-card-title>#{{room.id}}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    Players: {{room.users.length}}/{{room.userCapacity}}
+    <div class="player-number-panel">
+      <mat-icon>person</mat-icon>
+      <span>{{room.users.length}}/{{room.userCapacity}}</span>
+    </div>
   </mat-card-content>
   <mat-card-actions>
     <button mat-raised-button color="primary" (click)="clickOnJoinBtn()">Join</button>

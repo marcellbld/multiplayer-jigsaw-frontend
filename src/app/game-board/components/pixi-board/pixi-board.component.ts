@@ -53,14 +53,6 @@ export class PixiBoardComponent implements OnInit {
       events: this.pixiApp.renderer.events
     });
     
-    this.pixiViewport?.clamp({direction:'all'});
-    this.pixiViewport?.clampZoom({
-      minWidth: this.pixiViewport.screenWidth/3, 
-      minHeight: this.pixiViewport.screenHeight/3, 
-      maxWidth: this.pixiViewport.worldWidth,
-      maxHeight: this.pixiViewport.worldHeight,
-      });
-      
     this.pixiApp.stage.addChild(this.pixiViewport);
     this.pixiViewport
       .drag()
@@ -82,6 +74,15 @@ export class PixiBoardComponent implements OnInit {
     
     this.pixiViewport.worldWidth = this.worldWidth;
     this.pixiViewport.worldHeight = this.worldHeight;
+
+    this.pixiViewport?.clamp({direction:'all'});
+    this.pixiViewport?.clampZoom({
+      minWidth: this.pixiViewport.screenWidth/3, 
+      minHeight: this.pixiViewport.screenHeight/3, 
+      maxWidth: this.pixiViewport.worldWidth,
+      maxHeight: this.pixiViewport.worldHeight,
+      });
+    this.pixiViewport.setZoom(0.01, true);
   }
 
   public init(puzzle: Puzzle): void {
@@ -105,14 +106,16 @@ export class PixiBoardComponent implements OnInit {
       this.pixiViewport.addChild(bgSprite);
       this.pixiViewport.addChild(this.pieceContainer);
 
+
+        this.pixiViewport.moveCenter(
+          bgSprite.position.x + bgSprite.width/2,
+          bgSprite.position.y + bgSprite.height/2);
+        
+
       this.puzzleTexture = texture;
       this.createPieces(puzzle.pieceSize, puzzle.piecesDimensions, puzzle.puzzlePieces);
     
       this.pixiApp.resize();
-
-      this.pixiViewport.moveCenter(bgSprite.position.x + bgSprite.width/2,
-      bgSprite.position.y + bgSprite.height/2);
-      this.pixiViewport.setZoom(0.01, true);
     });
   }
 

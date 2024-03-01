@@ -27,3 +27,13 @@ mat-toolbar {
     margin-left: 20px;
   }
 }
+
+#login-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid lightgray;
+  border-radius: 30px;
+  padding: 5px 20px;
+}

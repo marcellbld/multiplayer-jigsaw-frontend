@@ -4,13 +4,15 @@
     Lobby
   </a>
   <span class="spacer"></span>
-  <ng-template [ngIf]="isLoggedIn()" [ngIfElse]="loggedOut">
-    <button mat-button color="primary" (click)="logout()">Logout</button>
-  </ng-template>
-  <ng-template #loggedOut>
-    <a mat-raised-button color="primary" [routerLink]="['/login']" routerLinkActive="router-link-active">Login</a>
-    <a mat-raised-button color="primary" [routerLink]="['/registration']" routerLinkActive="router-link-active">Registration</a>
-  </ng-template>
+  <div id="login-panel" >
+    <ng-template [ngIf]="isLoggedIn()" [ngIfElse]="loggedOut">
+      <button mat-button (click)="logout()">Logout</button>
+    </ng-template>
+    <ng-template #loggedOut>
+        <a mat-button [routerLink]="['/login']" routerLinkActive="router-link-active">Login</a>
+        <a mat-button [routerLink]="['/registration']" routerLinkActive="router-link-active">Registration</a>
+    </ng-template>
+  </div>
   <div class="theme-control">
     <mat-slide-toggle checked (click)="toggleTheme()"></mat-slide-toggle>
     @if (themeService.themeSignal() === 'dark') {

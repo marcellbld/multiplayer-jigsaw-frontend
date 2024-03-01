@@ -11,6 +11,7 @@ import { LobbyModule } from './lobby/lobby.module';
 import { RoomModule } from './room/room.module';
 import { GameBoardModule } from './game-board/game-board.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from '@environment/environment';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -32,7 +33,7 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ['localhost:8080'],
+        allowedDomains: [environment.apiUrl],
       },
     }),
     BrowserAnimationsModule,
