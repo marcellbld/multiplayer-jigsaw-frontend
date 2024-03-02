@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LobbyService } from '@app/core/services/lobby.service';
+import { ResourcesService } from '@app/core/services/resources.service';
 import convertImageToBase64 from '@app/utils/convert-image-to-base64';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-create-room',
@@ -9,6 +11,8 @@ import convertImageToBase64 from '@app/utils/convert-image-to-base64';
   styleUrls: ['./create-room.component.scss']
 })
 export class CreateRoomComponent {
+  
+  defaultImages: File[] = [];
 
   puzzleImageFile: File | null = null;
 
@@ -21,7 +25,14 @@ export class CreateRoomComponent {
   conversionError: string | null = null;
   submitError: string | null = null;
 
-  constructor(private lobbyService: LobbyService) {}
+  constructor(private lobbyService: LobbyService, private resourcesService: ResourcesService) {
+    for(let i = 0; i < 7; i++) {
+      resourcesService.getImageAsFile(`assets/default_images/default00${i+1}.jpg`).subscribe((image:File) => {
+        console.log(image);
+        this.defaultImages.push(image);
+      });
+    }
+  }
 
   onSubmit(): void {
     if(this.isDataInvalid())
@@ -32,15 +43,24 @@ export class CreateRoomComponent {
     
     this.lobbyService.createRoom( {
       pieces: this.pieces.value,
-      userCapacity: this.userCapacity.value,
-      puzzleImageBase64: this.puzzleImage.value
-    });
+      userCapacity: this.userCapacity.value
+    }, this.puzzleImageFile!);
 
     this.lobbyService.changeCreatingRoom(false);
   }
 
   uploadImage(event: any): void {
-    this.puzzleImageFile = event.target.files[0];
+    this.setPuzzleImage(event.target.files[0]);
+  }
+
+  clickOnDefaultImage(image: File): void {
+    this.setPuzzleImage(image);
+  }
+
+  private setPuzzleImage(file: File) {
+    this.puzzleImageFile = file;
+    console.log(this.puzzleImageFile);
+    
 
     if(this.puzzleImageFile != null) {
       convertImageToBase64(this.puzzleImageFile, (result: string) => {

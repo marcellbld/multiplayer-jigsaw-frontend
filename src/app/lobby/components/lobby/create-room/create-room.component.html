@@ -15,7 +15,7 @@
         }
       </mat-form-field>
       
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label for="userCapacity">User Capacity</mat-label>
         <input matInput placeholder="" type="number"
         formControlName="userCapacity" id="userCapacity" name="userCapacity"
@@ -26,25 +26,28 @@
         }
       </mat-form-field>
 
-      <div class="flex-column">
-        <div appearance="fill">
-          <mat-label for="puzzleImage">Puzzle Image</mat-label>
-          <div *ngIf="this.puzzleImageFile">
-            <img [src]="this.getUploadedImage()" class="m-auto d-block img-fluid"  style="height: 10rem;"/>
-          </div>
-            <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
-            <input hidden (change)="uploadImage($event)" #fileInput type="file" id="puzzleImage" name="puzzleImage">
-          </div>
+      <div class="image-panel">
+        <mat-label for="puzzleImage">Puzzle Image</mat-label>
+        <mat-grid-list cols="2" rowHeight="55px" gutterSize="5px">
+          <mat-grid-tile *ngFor="let image of defaultImages">
+            <img [src]="image.name" class="default-image selected" [class.selected]="image === puzzleImageFile" (click)="clickOnDefaultImage(image)"/>
+          </mat-grid-tile>
+        </mat-grid-list>
+        <div *ngIf="this.puzzleImageFile" id="image-preview">
+          <img [src]="this.getUploadedImage()"/>
+        </div>
+        <button type="button" mat-raised-button (click)="fileInput.click()">Upload Image</button>
+        <input hidden (change)="uploadImage($event)" #fileInput type="file" id="puzzleImage" name="puzzleImage">
 
-          @if (puzzleImage.touched && puzzleImage.hasError('required')) {
-            <mat-error>Puzzle Image is required</mat-error>
-          }
-          @if (conversionError) {
-            <mat-error>{{conversionError}}</mat-error>
-          }
-          @if (submitError) {
-            <mat-error>{{submitError}}</mat-error>
-          }
+        @if (puzzleImage.touched && puzzleImage.hasError('required')) {
+          <mat-error>Puzzle Image is required</mat-error>
+        }
+        @if (conversionError) {
+          <mat-error>{{conversionError}}</mat-error>
+        }
+        @if (submitError) {
+          <mat-error>{{submitError}}</mat-error>
+        }
       </div>
       <button mat-raised-button color="primary" type="submit">Create</button>
     </form>

@@ -10,8 +10,44 @@ mat-card {
 .container {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 
   h1 {
     text-align: center;
+  }
+}
+
+.image-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  mat-grid-list {
+    width: 100%;
+  }
+
+  .default-image {
+    height: 50px;
+    width: auto;
+    padding: 1px;
+    border-radius: 5px;
+
+    &.selected {
+      border:2px solid greenyellow;
+      padding: 0px;
+    }
+  }
+
+  #image-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+
+    img {
+      height: 150px;
+      width: auto;
+    }
   }
 }

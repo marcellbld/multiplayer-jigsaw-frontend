@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { SocketGameService } from '../ws/socket-game.service';
 import { SocketDestinations } from '../ws/models/socket-destinations.enum';
@@ -72,11 +72,18 @@ export class LobbyService {
     this.stompSubscriptions = [];
   }
 
-  public createRoom(lobbyCreateRoom: LobbyCreateRoomDto): void {
+  public createRoom(lobbyCreateRoom: LobbyCreateRoomDto, imageFile: File): void {
+    console.log(imageFile);
+    
+    const formData: FormData = new FormData();
+    formData.append('file', imageFile);
+    const jsonBlob = new Blob([JSON.stringify(lobbyCreateRoom)], { type: 'application/json' });
+        formData.append('dto', jsonBlob, 'dto.json');
+
     this.http
       .post<Room>(
         `${environment.apiUrl}/rooms`,
-        lobbyCreateRoom
+        formData
       ).subscribe((room: Room) => {
         this.roomService.join(room.id);
       });

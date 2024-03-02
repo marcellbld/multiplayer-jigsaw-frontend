@@ -30,6 +30,7 @@ export class PixiBoardComponent implements OnInit {
   private pieceMap: Map<number, PuzzlePieceSprite[]> = new Map();
 
   private puzzle: Puzzle;
+  private activePuzzlePiece: PuzzlePieceSprite | null = null;
 
   constructor(private hostRef: ElementRef, private gameBoard: GameBoardComponent) {
 
@@ -60,7 +61,9 @@ export class PixiBoardComponent implements OnInit {
       .wheel()
       .decelerate();
 
-      this.pieceContainer.sortableChildren = true;
+    this.pieceContainer.sortableChildren = true;
+    this.pieceContainer.eventMode = 'static';
+    this.pieceContainer.on('globalpointermove', (e:any) => this.onDragMove(e));
   }
 
   ngAfterViewInit() {
@@ -91,8 +94,12 @@ export class PixiBoardComponent implements OnInit {
     this.puzzle = puzzle;
     
     this.setWorldSize(puzzle.worldSize[0], puzzle.worldSize[1]);
+
+    console.log(puzzle.imageBase64);
     
     Assets.load(puzzle.imageBase64).then((texture: Texture) => {
+      console.log(texture);
+      
       const bgOffsetX = puzzle.pieceSize[0] *  PuzzlePieceSprite.SHAPE_OFFSET;
       const bgOffsetY = puzzle.pieceSize[1] *  PuzzlePieceSprite.SHAPE_OFFSET;
       const bgSprite = new Sprite(texture);
@@ -101,11 +108,10 @@ export class PixiBoardComponent implements OnInit {
       bgSprite.alpha = 0.5;
 
       bgSprite.position.set(this.worldWidth/2 - bgSprite.width/2 - bgOffsetX,
-                                 this.worldHeight/2 - bgSprite.height/2 - bgOffsetY);
+                                  this.worldHeight/2 - bgSprite.height/2 - bgOffsetY);
       
       this.pixiViewport.addChild(bgSprite);
       this.pixiViewport.addChild(this.pieceContainer);
-
 
         this.pixiViewport.moveCenter(
           bgSprite.position.x + bgSprite.width/2,
@@ -159,13 +165,6 @@ export class PixiBoardComponent implements OnInit {
       }
     }
   }
-  
-  private stopPanning():void{
-    this.pixiViewport.plugins.pause('drag');
-  }
-  private startPanning():void{
-    this.pixiViewport.plugins.resume('drag');
-  }
 
   public dragPieceSprite(pieceSprite: PuzzlePieceSprite) {
     this.gameBoard.dragPiece(pieceSprite.idX, pieceSprite.idY, [pieceSprite.position.x, pieceSprite.position.y]);
@@ -177,12 +176,6 @@ export class PixiBoardComponent implements OnInit {
   public releasePieceSprite(pieceSprite: PuzzlePieceSprite) {
     this.gameBoard.releasePiece(pieceSprite.idX, pieceSprite.idY, [pieceSprite.position.x, pieceSprite.position.y]);
     this.startPanning();
-  }
-
-  public getPuzzlePiece(x: number, y: number) {
-    if(x < 0 || y < 0 || x >= this.puzzlePieces.length || y >= this.puzzlePieces[0].length)
-      return null;
-    return this.puzzlePieces[x][y];
   }
 
   public movePiece(user: RoomUser, piece: PuzzlePiece) {
@@ -206,14 +199,6 @@ export class PixiBoardComponent implements OnInit {
         }
       }
     }
-  }
-
-  private getRealX(idX: number): number {
-    return this.puzzle.worldSize[0]/2.- this.puzzle.imageSize[0]/2.-this.puzzle.pieceSize[0]/4.+idX*this.puzzle.pieceSize[0];
-  }
-
-  private getRealY(idY: number): number {
-    return this.puzzle.worldSize[1]/2.- this.puzzle.imageSize[1]/2.-this.puzzle.pieceSize[1]/4.+idY*this.puzzle.pieceSize[1];
   }
 
   public releasePiece(piece: PuzzlePiece, changedPieces: PuzzlePiece[] = []) {
@@ -265,8 +250,40 @@ export class PixiBoardComponent implements OnInit {
       }
     }
   }
+
+  private onDragMove(event:any):void {
+    console.log("dragmove");
+    if(this.activePuzzlePiece != null) {
+      this.activePuzzlePiece.onDragMove(event);
+    }
+  }
+  
+  private stopPanning():void{
+    this.pixiViewport.plugins.pause('drag');
+  }
+  private startPanning():void{
+    this.pixiViewport.plugins.resume('drag');
+  }
   
   public zoom(strength: number) {
     this.pixiViewport.zoom(strength, true);
+  }
+
+  public setActivePuzzlePiece(piece: PuzzlePieceSprite | null) {
+    this.activePuzzlePiece = piece;
+  }
+
+  public getPuzzlePiece(x: number, y: number) {
+    if(x < 0 || y < 0 || x >= this.puzzlePieces.length || y >= this.puzzlePieces[0].length)
+      return null;
+    return this.puzzlePieces[x][y];
+  }
+
+  private getRealX(idX: number): number {
+    return this.puzzle.worldSize[0]/2.- this.puzzle.imageSize[0]/2.-this.puzzle.pieceSize[0]/4.+idX*this.puzzle.pieceSize[0];
+  }
+
+  private getRealY(idY: number): number {
+    return this.puzzle.worldSize[1]/2.- this.puzzle.imageSize[1]/2.-this.puzzle.pieceSize[1]/4.+idY*this.puzzle.pieceSize[1];
   }
 }

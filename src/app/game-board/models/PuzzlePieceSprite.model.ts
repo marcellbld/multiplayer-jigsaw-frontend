@@ -74,8 +74,7 @@ export class PuzzlePieceSprite extends Container {
     this.eventMode = "static";
     this.on('pointerdown', this.onDragStart)
     .on('pointerup', this.onDragEnd)
-    .on('pointerupoutside', this.onDragEnd)
-    .on('pointermove', this.onDragMove);
+    .on('pointerupoutside', this.onDragEnd);
   }
 
   public setPosition(x: number, y: number): void {
@@ -94,6 +93,7 @@ export class PuzzlePieceSprite extends Container {
     this.dragOffset.set(newPosition.x * target.scale.x, newPosition.y * target.scale.y);
 
     this.dragging = true;
+    this.pixiBoard.setActivePuzzlePiece(this);
     this.pixiBoard.dragPieceSprite(this);
     this.filters = [this.shadowFilter];
     this.zIndex = 999;
@@ -106,12 +106,13 @@ export class PuzzlePieceSprite extends Container {
 
     this.dragging = false;
     this.pixiBoard.releasePieceSprite(this);
+    this.pixiBoard.setActivePuzzlePiece(null);
 
     this.zIndex = target.position.y-target.height/2;
     this.filters = [];
   }
 
-  private onDragMove(event:any):void {
+  public onDragMove(event:any):void {
     if(!this.dragging || this.interactedUser || this.completed)
       return;
 
