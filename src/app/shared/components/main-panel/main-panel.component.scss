@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  width: 300px !important;
+  padding: 20px;
+  border: 1px solid lightgray;
+  border-radius: 36px;
+
+  #header {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+}

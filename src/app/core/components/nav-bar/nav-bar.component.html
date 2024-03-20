@@ -1,24 +1,35 @@
 <mat-toolbar class="navbar">
-  <a mat-fab extended color="primary" [routerLink]="['/lobby']">
+  <a mat-raised-button color="primary" [routerLink]="['/lobby']">
     <mat-icon>home</mat-icon>
     Lobby
   </a>
   <span class="spacer"></span>
-  <div id="login-panel" >
+  <div id="login-panel">
     <ng-template [ngIf]="isLoggedIn()" [ngIfElse]="loggedOut">
       <button mat-button (click)="logout()">Logout</button>
     </ng-template>
     <ng-template #loggedOut>
-        <a mat-button [routerLink]="['/login']" routerLinkActive="router-link-active">Login</a>
-        <a mat-button [routerLink]="['/registration']" routerLinkActive="router-link-active">Registration</a>
+      <a
+        mat-button
+        [routerLink]="['/login']"
+        routerLinkActive="router-link-active"
+        >Login</a
+      >
+      <a
+        mat-button
+        [routerLink]="['/registration']"
+        routerLinkActive="router-link-active"
+        >Registration</a
+      >
     </ng-template>
   </div>
   <div class="theme-control">
-    <mat-slide-toggle checked (click)="toggleTheme()"></mat-slide-toggle>
-    @if (themeService.themeSignal() === 'dark') {
+    <a mat-icon-button (click)="toggleTheme()">
+      @if (themeService.themeSignal() === 'dark') {
       <mat-icon>bedtime</mat-icon>
-    } @else {
+      } @else {
       <mat-icon>brightness_5</mat-icon>
-    }
+      }
+    </a>
   </div>
 </mat-toolbar>

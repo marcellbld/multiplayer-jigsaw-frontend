@@ -8,7 +8,7 @@
 }
 
 .router-link-active {
-  color:darkgray !important;
+  color: darkgray !important;
   pointer-events: none;
 }
 
@@ -33,7 +33,6 @@ mat-toolbar {
   align-items: center;
   justify-content: center;
 
-  border: 1px solid lightgray;
   border-radius: 30px;
   padding: 5px 20px;
 }

@@ -1,27 +1,9 @@
-mat-card {
-  width: 300px !important;
-  
-  mat-card-header {
-    margin-left:5px;
-    margin-bottom: 10px;
-  }
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  h1 {
-    text-align: center;
-  }
-}
-
 .image-panel {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  width: 75%;
 
   mat-grid-list {
     width: 100%;
@@ -34,7 +16,7 @@ mat-card {
     border-radius: 5px;
 
     &.selected {
-      border:2px solid greenyellow;
+      border: 2px solid greenyellow;
       padding: 0px;
     }
   }
