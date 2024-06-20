@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://multiplayer-jigsaw-backend.fly.dev',
-  wsApiUrl: 'https://multiplayer-jigsaw-backend.fly.dev/ws'
+  apiUrl: 'https://urchin-app-uis46.ondigitalocean.app',
+  wsApiUrl: 'https://urchin-app-uis46.ondigitalocean.app/ws'
 };
