@@ -10,12 +10,30 @@ body {
 }
 // body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.mat-mdc-raised-button {
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-button {
   border-radius: 36px !important;
+}
+
+.mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper {
+  padding-left: 16px !important;
+  --mat-mdc-form-field-label-offset-x: inherit !important;
+}
+
+.mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 28px !important;
 }
 
 .main-btn {
   width: 50%;
+
+  // background-color: whitesmoke !important;
+  // color: #000 !important;
+}
+.secondary-btn {
+  background-color: whitesmoke !important;
+  color: #000 !important;
 }
 
 .main-container {

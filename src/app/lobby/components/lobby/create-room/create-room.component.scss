@@ -4,6 +4,7 @@
   align-items: center;
   gap: 10px;
   width: 75%;
+  margin-bottom: 10px;
 
   mat-grid-list {
     width: 100%;
@@ -16,7 +17,7 @@
     border-radius: 5px;
 
     &.selected {
-      border: 2px solid greenyellow;
+      border: 2px solid #ffc107;
       padding: 0px;
     }
   }
