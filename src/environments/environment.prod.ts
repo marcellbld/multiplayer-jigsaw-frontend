@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://urchin-app-uis46.ondigitalocean.app',
-  wsApiUrl: 'https://urchin-app-uis46.ondigitalocean.app/ws'
+  apiUrl: 'https://orca-app-b3w8a.ondigitalocean.app',
+  wsApiUrl: 'https://orca-app-b3w8a.ondigitalocean.app/ws'
 };
