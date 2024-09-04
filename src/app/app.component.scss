@@ -44,9 +44,9 @@
 }
 
 .background.dark::before {
-  background-color: rgb(99, 79, 15);
+  background-color: rgb(59, 84, 138);
   background-blend-mode: multiply;
-  filter: opacity(5%);
+  filter: opacity(2%);
 }
 
 .background.light::before {

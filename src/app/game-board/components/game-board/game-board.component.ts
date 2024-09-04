@@ -18,7 +18,7 @@ import { RoomUserLeftDto } from '@app/shared/models/ws-messages/room-user-left-d
 })
 export class GameBoardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(PixiBoardComponent) pixiBoard: PixiBoardComponent;
-  
+
   private subscriptions: Subscription[] = [];
 
   constructor(private roomService: RoomService, private socketGameService: SocketGameService) {
@@ -28,7 +28,7 @@ export class GameBoardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.roomService.roomSubject.subscribe(
         room => {
-          if(room.id){
+          if (room.id) {
             this.init(room);
             this.subscriptions[0].unsubscribe();
           }
@@ -36,41 +36,41 @@ export class GameBoardComponent implements OnInit, AfterViewInit, OnDestroy {
       ),
       this.roomService.roomEvent.subscribe((message) => this.handleRoomEvent(message))
     );
-    if(this.roomService.roomSubject.value.id){
+    if (this.roomService.roomSubject.value.id) {
       this.init(this.roomService.roomSubject.value);
     }
   }
 
   ngOnInit(): void {
   }
-  
+
   ngOnDestroy(): void {
-    for(let sub of this.subscriptions){
+    for (let sub of this.subscriptions) {
       sub.unsubscribe();
     }
     this.subscriptions = [];
   }
 
   private handleRoomEvent(message: SocketMessage) {
-    if(message.event === SocketEventType.Room_Puzzle_Move) {
+    if (message.event === SocketEventType.Room_Puzzle_Move) {
       const body: RoomPuzzleMoveDto = message.body;
       this.puzzleMoveEvent(body);
-    } else if(message.event === SocketEventType.Room_Puzzle_Release) {
+    } else if (message.event === SocketEventType.Room_Puzzle_Release) {
       const body: RoomPuzzleReleaseDto = message.body;
       this.puzzleReleaseEvent(body);
-    } else if(message.event === SocketEventType.Room_UserLeft) {
+    } else if (message.event === SocketEventType.Room_UserLeft) {
       const body: RoomUserLeftDto = message.body;
       this.pixiBoard.removeInteractionFromPieces(body.user);
     }
   }
 
   private puzzleMoveEvent(roomPuzzleMove: RoomPuzzleMoveDto): void {
-    if(roomPuzzleMove.username === this.socketGameService.getUsername())
+    if (roomPuzzleMove.username === this.socketGameService.getUsername())
       return;
 
     const user: RoomUser | undefined = this.roomService.getUserByUsername(roomPuzzleMove.username);
 
-    if(!user){
+    if (!user) {
       return;
     }
 
@@ -82,17 +82,17 @@ export class GameBoardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public dragPiece(idX: number, idY: number, position: number[]) {
-    this.roomService.sendMovePuzzlePiece({idX, idY, position, group: 0});
+    this.roomService.sendMovePuzzlePiece({ idX, idY, position, group: 0 });
   }
 
   public releasePiece(idX: number, idY: number, position: number[]) {
-    this.roomService.sendReleasePuzzlePiece({idX, idY, position, group: 0});
+    this.roomService.sendReleasePuzzlePiece({ idX, idY, position, group: 0 });
   }
 
   public zoom(strength: number) {
     this.pixiBoard.zoom(strength);
   }
-  
+
   public init(room: Room): void {
     this.pixiBoard.init(room.puzzle);
   }
