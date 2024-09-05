@@ -1,15 +1,45 @@
 mat-card {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 10px;
+  border-radius: 15px;
+  border: 1px solid rgb(114, 114, 114);
+  background-size: cover; /* Ensures the image covers the div */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  font-size: 1.5rem;
+  color: white;
+  text-shadow: 0px 1px 2px black;
 
-  height: 60px;
+  height: 300px;
   width: 300px;
 
   mat-card-header {
     padding: 0;
+    display: inline-block;
+    width: 100%;
   }
+
+  mat-card-title {
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  mat-card-content {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  box-shadow: inset 10px 24px 40px 0px rgba(0, 0, 0, 0.36),
+    inset -10px -24px 40px 0px rgba(0, 0, 0, 0.36),
+    inset 20px -50px 40px 0px rgba(0, 0, 0, 0.36),
+    inset -20px 10px 40px 0px rgba(0, 0, 0, 0.36);
 }
 
 .player-number-panel {
@@ -20,5 +50,20 @@ mat-card {
 
   span {
     padding-left: 3px;
+  }
+}
+
+.puzzle-pieces-panel {
+  display: flex;
+  height: 30px;
+  gap: 5px;
+}
+
+.puzzle-image-panel {
+  height: 100%;
+  object-fit: fill;
+
+  img {
+    object-fit: contain;
   }
 }

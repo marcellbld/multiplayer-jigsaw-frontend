@@ -1,15 +1,22 @@
-<mat-card>
+<mat-card [style.backgroundImage]="'url(' + room.puzzle.imageBase64 + ')'">
   <mat-card-header>
-    <mat-card-title>#{{room.id}}</mat-card-title>
+    <mat-card-title>
+      <span>#{{ room.id }}</span>
+      <span class="puzzle-pieces-panel">
+        <img src="/assets/puzzle-piece.svg" alt="Puzzle piece icon" />
+        {{ pieces }}
+      </span>
+    </mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <div class="player-number-panel">
       <mat-icon>person</mat-icon>
-      <span>{{room.users.length}}/{{room.userCapacity}}</span>
+      <span>{{ room.users.length }}/{{ room.userCapacity }}</span>
     </div>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="clickOnJoinBtn()">Join</button>
+    <button mat-raised-button color="primary" (click)="clickOnJoinBtn()">
+      Join
+    </button>
   </mat-card-actions>
 </mat-card>
-  

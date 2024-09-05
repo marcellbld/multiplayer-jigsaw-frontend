@@ -13,7 +13,7 @@ import { RoomUser } from '@app/shared/models/room-user.model';
   styleUrls: ['./pixi-board.component.scss']
 })
 export class PixiBoardComponent implements OnInit {
-  @ViewChild('pixiContainer', { static: true}) pixiContainer: ElementRef;
+  @ViewChild('pixiContainer', { static: true }) pixiContainer: ElementRef;
 
   private pixiApp: Application;
   private pixiViewport: Viewport;
@@ -53,7 +53,7 @@ export class PixiBoardComponent implements OnInit {
       worldHeight: this.worldHeight,
       events: this.pixiApp.renderer.events
     });
-    
+
     this.pixiApp.stage.addChild(this.pixiViewport);
     this.pixiViewport
       .drag()
@@ -63,7 +63,7 @@ export class PixiBoardComponent implements OnInit {
 
     this.pieceContainer.sortableChildren = true;
     this.pieceContainer.eventMode = 'static';
-    this.pieceContainer.on('globalpointermove', (e:any) => this.onDragMove(e));
+    this.pieceContainer.on('globalpointermove', (e: any) => this.onDragMove(e));
   }
 
   ngAfterViewInit() {
@@ -74,17 +74,17 @@ export class PixiBoardComponent implements OnInit {
   private setWorldSize(worldWidth: number, worldHeight: number) {
     this.worldWidth = worldWidth;
     this.worldHeight = worldHeight;
-    
+
     this.pixiViewport.worldWidth = this.worldWidth;
     this.pixiViewport.worldHeight = this.worldHeight;
 
-    this.pixiViewport?.clamp({direction:'all'});
+    this.pixiViewport?.clamp({ direction: 'all' });
     this.pixiViewport?.clampZoom({
-      minWidth: this.pixiViewport.screenWidth/3, 
-      minHeight: this.pixiViewport.screenHeight/3, 
+      minWidth: this.pixiViewport.screenWidth / 3,
+      minHeight: this.pixiViewport.screenHeight / 3,
       maxWidth: this.pixiViewport.worldWidth,
       maxHeight: this.pixiViewport.worldHeight,
-      });
+    });
     this.pixiViewport.setZoom(0.01, true);
   }
 
@@ -92,35 +92,35 @@ export class PixiBoardComponent implements OnInit {
     this.reset();
 
     this.puzzle = puzzle;
-    
+
     this.setWorldSize(puzzle.worldSize[0], puzzle.worldSize[1]);
 
     console.log(puzzle.imageBase64);
-    
+
     Assets.load(puzzle.imageBase64).then((texture: Texture) => {
       console.log(texture);
-      
-      const bgOffsetX = puzzle.pieceSize[0] *  PuzzlePieceSprite.SHAPE_OFFSET;
-      const bgOffsetY = puzzle.pieceSize[1] *  PuzzlePieceSprite.SHAPE_OFFSET;
+
+      const bgOffsetX = puzzle.pieceSize[0] * PuzzlePieceSprite.SHAPE_OFFSET;
+      const bgOffsetY = puzzle.pieceSize[1] * PuzzlePieceSprite.SHAPE_OFFSET;
       const bgSprite = new Sprite(texture);
       bgSprite.width = puzzle.imageSize[0];
       bgSprite.height = puzzle.imageSize[1];
       bgSprite.alpha = 0.5;
 
-      bgSprite.position.set(this.worldWidth/2 - bgSprite.width/2 - bgOffsetX,
-                                  this.worldHeight/2 - bgSprite.height/2 - bgOffsetY);
-      
+      bgSprite.position.set(this.worldWidth / 2 - bgSprite.width / 2 - bgOffsetX,
+        this.worldHeight / 2 - bgSprite.height / 2 - bgOffsetY);
+
       this.pixiViewport.addChild(bgSprite);
       this.pixiViewport.addChild(this.pieceContainer);
 
-        this.pixiViewport.moveCenter(
-          bgSprite.position.x + bgSprite.width/2,
-          bgSprite.position.y + bgSprite.height/2);
-        
+      this.pixiViewport.moveCenter(
+        bgSprite.position.x + bgSprite.width / 2,
+        bgSprite.position.y + bgSprite.height / 2);
+
 
       this.puzzleTexture = texture;
       this.createPieces(puzzle.pieceSize, puzzle.piecesDimensions, puzzle.puzzlePieces);
-    
+
       this.pixiApp.resize();
     });
   }
@@ -133,8 +133,8 @@ export class PixiBoardComponent implements OnInit {
   }
 
   private createPieces(pieceSize: number[], piecesDimensions: number[], pieces: PuzzlePiece[]) {
-    const scaleX = this.puzzle.imageSize[0]/this.puzzleTexture.width;
-    const scaleY = this.puzzle.imageSize[1]/this.puzzleTexture.height;
+    const scaleX = this.puzzle.imageSize[0] / this.puzzleTexture.width;
+    const scaleY = this.puzzle.imageSize[1] / this.puzzleTexture.height;
 
     const pieceWidth = pieceSize[0];
     const pieceHeight = pieceSize[1];
@@ -142,25 +142,25 @@ export class PixiBoardComponent implements OnInit {
     const piecesY = piecesDimensions[1];
 
     this.puzzlePieces = new Array(piecesX)
-    .fill(undefined)
-    .map(() => new Array(piecesY)
-    .fill(undefined));
+      .fill(undefined)
+      .map(() => new Array(piecesY)
+        .fill(undefined));
 
-    for(let i = 0; i < piecesY; i++) {
-      for(let j = 0; j < piecesX; j++) {
-        
-        const piece = pieces[i*piecesX+j];
+    for (let i = 0; i < piecesY; i++) {
+      for (let j = 0; j < piecesX; j++) {
+
+        const piece = pieces[i * piecesX + j];
 
         const pieceSprite = new PuzzlePieceSprite(this, this.puzzleTexture, pieceWidth, pieceHeight, j, i, scaleX, scaleY, piecesDimensions);
         pieceSprite.setPosition(piece.position[0], piece.position[1]);
         this.setGroup(pieceSprite, piece.group);
 
-        if(piece.group === -9999) {
+        if (piece.group === -9999) {
           pieceSprite.setCompleted(true);
         }
 
         this.puzzlePieces[j][i] = pieceSprite;
-        
+
         this.pieceContainer.addChild(pieceSprite);
       }
     }
@@ -169,11 +169,12 @@ export class PixiBoardComponent implements OnInit {
   public dragPieceSprite(pieceSprite: PuzzlePieceSprite) {
     this.gameBoard.dragPiece(pieceSprite.idX, pieceSprite.idY, [pieceSprite.position.x, pieceSprite.position.y]);
     this.stopPanning();
-    
+
     this.movePieceGroup(pieceSprite);
   }
 
   public releasePieceSprite(pieceSprite: PuzzlePieceSprite) {
+
     this.gameBoard.releasePiece(pieceSprite.idX, pieceSprite.idY, [pieceSprite.position.x, pieceSprite.position.y]);
     this.startPanning();
   }
@@ -188,10 +189,10 @@ export class PixiBoardComponent implements OnInit {
   }
 
   private movePieceGroup(keyPieceSprite: PuzzlePieceSprite) {
-    if(this.pieceMap.has(keyPieceSprite.group)){
-      for(let ps of this.pieceMap.get(keyPieceSprite.group)!) {
-        
-        if(ps !== keyPieceSprite){
+    if (this.pieceMap.has(keyPieceSprite.group)) {
+      for (let ps of this.pieceMap.get(keyPieceSprite.group)!) {
+
+        if (ps !== keyPieceSprite) {
           const newX = keyPieceSprite.x + this.getRealX(ps.idX) - this.getRealX(keyPieceSprite.idX);
           const newY = keyPieceSprite.y + this.getRealY(ps.idY) - this.getRealY(keyPieceSprite.idY);
 
@@ -204,67 +205,69 @@ export class PixiBoardComponent implements OnInit {
   public releasePiece(piece: PuzzlePiece, changedPieces: PuzzlePiece[] = []) {
     const pieceSprite: PuzzlePieceSprite = this.puzzlePieces[piece.idX][piece.idY];
 
+    console.log("RELEASE " + piece.idX + " " + piece.idY);
+    console.log(changedPieces);
+
     this.setGroup(pieceSprite, piece.group);
     pieceSprite.setPosition(piece.position[0], piece.position[1]);
     pieceSprite.setInteractedUser(null);
-    if(piece.group === -9999) {
+    if (piece.group === -9999) {
       pieceSprite.setCompleted(true);
     }
 
-    for(let i = 0; i < changedPieces.length; i++) {
+    for (let i = 0; i < changedPieces.length; i++) {
       const p = changedPieces[i];
       const pSprite = this.puzzlePieces[p.idX][p.idY];
       this.setGroup(pSprite, piece.group);
-      
-      if(piece.group === -9999) {
+
+      if (piece.group === -9999) {
         pSprite.setCompleted(true);
       }
     }
-    
+
     this.movePieceGroup(pieceSprite);
   }
 
   public setGroup(pieceSprite: PuzzlePieceSprite, group: number) {
-    if(pieceSprite.group !== group && this.pieceMap.has(pieceSprite.group)) {
+    if (pieceSprite.group !== group && this.pieceMap.has(pieceSprite.group)) {
       this.pieceMap.set(pieceSprite.group, this.pieceMap.get(pieceSprite.group)!.filter(ps => ps !== pieceSprite));
     }
 
     pieceSprite.setGroup(group);
 
-    if(this.pieceMap.has(group)){
-      if(!this.pieceMap.get(group)?.includes(pieceSprite)){
+    if (this.pieceMap.has(group)) {
+      if (!this.pieceMap.get(group)?.includes(pieceSprite)) {
         this.pieceMap.set(group, [...this.pieceMap.get(group)!, pieceSprite]);
       }
     } else {
       this.pieceMap.set(group, [pieceSprite]);
     }
   }
-  
+
   public removeInteractionFromPieces(user: RoomUser) {
-    for(let i = 0; i < this.puzzlePieces.length; i++) {
-      for(let j = 0; j < this.puzzlePieces[0].length; j++) {
+    for (let i = 0; i < this.puzzlePieces.length; i++) {
+      for (let j = 0; j < this.puzzlePieces[0].length; j++) {
         const pieceSprite = this.puzzlePieces[i][j];
-        if(pieceSprite.getInteractedUser()?.username == user.username){
+        if (pieceSprite.getInteractedUser()?.username == user.username) {
           pieceSprite.setInteractedUser(null);
         }
       }
     }
   }
 
-  private onDragMove(event:any):void {
-    console.log("dragmove");
-    if(this.activePuzzlePiece != null) {
+  private onDragMove(event: any): void {
+    if (this.activePuzzlePiece != null) {
       this.activePuzzlePiece.onDragMove(event);
     }
   }
-  
-  private stopPanning():void{
+
+  private stopPanning(): void {
     this.pixiViewport.plugins.pause('drag');
   }
-  private startPanning():void{
+  private startPanning(): void {
     this.pixiViewport.plugins.resume('drag');
   }
-  
+
   public zoom(strength: number) {
     this.pixiViewport.zoom(strength, true);
   }
@@ -274,16 +277,16 @@ export class PixiBoardComponent implements OnInit {
   }
 
   public getPuzzlePiece(x: number, y: number) {
-    if(x < 0 || y < 0 || x >= this.puzzlePieces.length || y >= this.puzzlePieces[0].length)
+    if (x < 0 || y < 0 || x >= this.puzzlePieces.length || y >= this.puzzlePieces[0].length)
       return null;
     return this.puzzlePieces[x][y];
   }
 
   private getRealX(idX: number): number {
-    return this.puzzle.worldSize[0]/2.- this.puzzle.imageSize[0]/2.-this.puzzle.pieceSize[0]/4.+idX*this.puzzle.pieceSize[0];
+    return this.puzzle.worldSize[0] / 2. - this.puzzle.imageSize[0] / 2. - this.puzzle.pieceSize[0] / 4. + idX * this.puzzle.pieceSize[0];
   }
 
   private getRealY(idY: number): number {
-    return this.puzzle.worldSize[1]/2.- this.puzzle.imageSize[1]/2.-this.puzzle.pieceSize[1]/4.+idY*this.puzzle.pieceSize[1];
+    return this.puzzle.worldSize[1] / 2. - this.puzzle.imageSize[1] / 2. - this.puzzle.pieceSize[1] / 4. + idY * this.puzzle.pieceSize[1];
   }
 }

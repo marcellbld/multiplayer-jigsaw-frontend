@@ -5,17 +5,18 @@ import { BevelFilter } from "@pixi/filter-bevel";
 import { DropShadowFilter } from "@pixi/filter-drop-shadow";
 import { OutlineFilter } from "@pixi/filter-outline";
 import { RoomUser } from "@app/shared/models/room-user.model";
+import { timer } from "rxjs";
 
 export class PuzzlePieceSprite extends Container {
   public static readonly SHAPE_OFFSET: number = 0.25;
 
   private sprite: TilingSprite;
   public tabs: number[] = [];
-  
+
   private shadowFilter: DropShadowFilter;
   private outlineFilter: OutlineFilter;
 
-  private interactedUser: RoomUser | null =  null;
+  private interactedUser: RoomUser | null = null;
   private completed: boolean = false;
 
   public idX: number;
@@ -30,62 +31,63 @@ export class PuzzlePieceSprite extends Container {
     this.idY = tIdY;
 
 
-    const offsetX = tPieceWidth*PuzzlePieceSprite.SHAPE_OFFSET;
-    const offsetY = tPieceHeight*PuzzlePieceSprite.SHAPE_OFFSET;
+    const offsetX = tPieceWidth * PuzzlePieceSprite.SHAPE_OFFSET;
+    const offsetY = tPieceHeight * PuzzlePieceSprite.SHAPE_OFFSET;
 
     this.sprite = new TilingSprite(puzzleTexture);
     this.sprite.tileScale.set(scaleX, scaleY);
-    this.sprite.width = tPieceWidth + offsetX*2;
-    this.sprite.height = tPieceHeight + offsetY*2;
+    this.sprite.width = tPieceWidth + offsetX * 2;
+    this.sprite.height = tPieceHeight + offsetY * 2;
 
     this.width = this.sprite.width;
     this.height = this.sprite.height;
-    this.sprite.pivot.set(this.width/2, this.height/2);
-    this.pivot.set(this.width/2+offsetX, this.height/2+offsetY);
+    this.sprite.pivot.set(this.width / 2, this.height / 2);
+    this.pivot.set(this.width / 2 + offsetX, this.height / 2 + offsetY);
 
-    const topPiece = pixiBoard.getPuzzlePiece(tIdX, tIdY-1);
+    const topPiece = pixiBoard.getPuzzlePiece(tIdX, tIdY - 1);
     const leftPiece = pixiBoard.getPuzzlePiece(tIdX - 1, tIdY);
 
     const topTab = tIdY === 0 ? 0 : -topPiece!.tabs[2];
-    const rightTab = tIdX === (piecesDimensions[0]-1) ? 0 : Math.random() < 0.5 ? 1 : -1;
-    const bottomTab = tIdY === (piecesDimensions[1]-1) ? 0 : Math.random() < 0.5 ? 1 : -1;
+    const rightTab = tIdX === (piecesDimensions[0] - 1) ? 0 : Math.random() < 0.5 ? 1 : -1;
+    const bottomTab = tIdY === (piecesDimensions[1] - 1) ? 0 : Math.random() < 0.5 ? 1 : -1;
     const leftTab = tIdX === 0 ? 0 : -leftPiece!.tabs[1];
 
-    this.tabs = [topTab, rightTab, bottomTab,  leftTab];
+    this.tabs = [topTab, rightTab, bottomTab, leftTab];
 
     this.sprite.tilePosition.x = 0 - (tIdX) * tPieceWidth + offsetX;
     this.sprite.tilePosition.y = 0 - tIdY * tPieceHeight + offsetY;
     this.zIndex = 1;
 
     this.sprite.cacheAsBitmap = true;
-    this.shadowFilter = new DropShadowFilter({pixelSize: 1, blur:1, alpha: 0.3});
+    this.shadowFilter = new DropShadowFilter({ pixelSize: 1, blur: 1, alpha: 0.3 });
     this.sprite.filters = [new BevelFilter(
-      {thickness: Math.max(tPieceWidth*0.0175,1), lightAlpha: 0.15, shadowAlpha: 0.3, lightColor: 0xF7EFDA, rotation: 45, shadowColor: 0x000000
-    })];
+      {
+        thickness: Math.max(tPieceWidth * 0.0175, 1), lightAlpha: 0.15, shadowAlpha: 0.3, lightColor: 0xF7EFDA, rotation: 45, shadowColor: 0x000000
+      })];
     this.outlineFilter = new OutlineFilter(2, 0xFF0000);
 
-    const shape = createShape(this.sprite.width/2, this.sprite.height/2, tPieceWidth, tPieceHeight, this.tabs, 0x3498db);
+    const shape = createShape(this.sprite.width / 2, this.sprite.height / 2, tPieceWidth, tPieceHeight, this.tabs, 0x3498db);
 
-    shape.alpha= 0.8;
+    shape.alpha = 0.8;
     this.sprite.mask = shape;
 
     this.addChild(this.sprite);
-    
+
     this.eventMode = "static";
     this.on('pointerdown', this.onDragStart)
-    .on('pointerup', this.onDragEnd)
-    .on('pointerupoutside', this.onDragEnd);
+      .on('pointerup', this.onDragEnd)
+      .on('pointerupoutside', this.onDragEnd);
   }
 
   public setPosition(x: number, y: number): void {
-    this.position.set(x,y);
+    this.position.set(x, y);
   }
 
   private dragging: boolean = false;
-  private dragOffset: Point = new Point(0,0);
-  
-  private onDragStart(event:any):void {
-    if(this.interactedUser || this.completed) return;
+  private dragOffset: Point = new Point(0, 0);
+
+  public onDragStart(event: any): void {
+    if (this.interactedUser || this.completed) return;
 
     const target = event.currentTarget;
 
@@ -99,22 +101,26 @@ export class PuzzlePieceSprite extends Container {
     this.zIndex = 999;
   }
 
-  private onDragEnd(event:any):void {
-    if(this.interactedUser || this.completed) return;
+  public async onDragEnd(event: any) {
+    if (this.interactedUser || this.completed) return;
 
-    const target = event.currentTarget;
+    timer(100).subscribe(() => {
+      const target = event.currentTarget;
 
-    this.dragging = false;
-    this.pixiBoard.releasePieceSprite(this);
-    this.pixiBoard.setActivePuzzlePiece(null);
+      this.dragging = false;
+      this.pixiBoard.releasePieceSprite(this);
+      this.pixiBoard.setActivePuzzlePiece(null);
 
-    this.zIndex = target.position.y-target.height/2;
-    this.filters = [];
+      this.zIndex = target.position.y - target.height / 2;
+      this.filters = [];
+    });
   }
 
-  public onDragMove(event:any):void {
-    if(!this.dragging || this.interactedUser || this.completed)
+  public onDragMove(event: any): void {
+    if (!this.dragging || this.interactedUser || this.completed)
       return;
+
+
 
     const target = event.currentTarget;
 
@@ -123,17 +129,17 @@ export class PuzzlePieceSprite extends Container {
     newPosition.y = newPosition.y - this.dragOffset.y + this.pivot.y;
 
     this.setPosition(newPosition.x, newPosition.y);
-    
+
     this.pixiBoard.dragPieceSprite(this);
-    
-    this.zIndex = target.position.y+target.height/2;
+
+    this.zIndex = target.position.y + target.height / 2;
   }
 
-  public setInteractedUser(interactedUser: RoomUser | null): void  {
+  public setInteractedUser(interactedUser: RoomUser | null): void {
     this.interactedUser = interactedUser;
     this.dragging = false;
 
-    if(interactedUser){
+    if (interactedUser) {
       this.outlineFilter.color = interactedUser.getColorNumber();
       this.filters = [this.outlineFilter];
     } else {
@@ -152,7 +158,7 @@ export class PuzzlePieceSprite extends Container {
   public setCompleted(completed: boolean) {
     this.completed = completed;
 
-    if(completed) {
+    if (completed) {
       this.eventMode = 'none';
       this.zIndex = -999;
     }

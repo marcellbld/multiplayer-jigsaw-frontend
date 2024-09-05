@@ -57,6 +57,7 @@ export class GameBoardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.puzzleMoveEvent(body);
     } else if (message.event === SocketEventType.Room_Puzzle_Release) {
       const body: RoomPuzzleReleaseDto = message.body;
+
       this.puzzleReleaseEvent(body);
     } else if (message.event === SocketEventType.Room_UserLeft) {
       const body: RoomUserLeftDto = message.body;
@@ -65,6 +66,10 @@ export class GameBoardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private puzzleMoveEvent(roomPuzzleMove: RoomPuzzleMoveDto): void {
+    console.log("PUZZLE MOVE EVENT ");
+    console.log(roomPuzzleMove);
+
+
     if (roomPuzzleMove.username === this.socketGameService.getUsername())
       return;
 

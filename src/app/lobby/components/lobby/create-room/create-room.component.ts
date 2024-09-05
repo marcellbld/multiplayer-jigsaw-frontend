@@ -27,12 +27,6 @@ export class CreateRoomComponent {
   submitError: string | null = null;
 
   constructor(private lobbyService: LobbyService, private resourcesService: ResourcesService) {
-    // for(let i = 0; i < 7; i++) {
-    //   resourcesService.getImageAsFile(`assets/default_images/default00${i+1}.jpg`).subscribe((image:File) => {
-    //     console.log(image);
-    //     this.defaultImages.push(image);
-    //   });
-    // }
     this.defaultImagesLoading = true;
 
     resourcesService.getDefaultImages().subscribe((images: File[]) => {

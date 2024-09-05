@@ -50,13 +50,13 @@ $dark-text-color: #333;
 
   background-color: $dark-bg-color;
   color: $light-text-color;
-  --border-color: rgba(255, 255, 255, 0.178);
+  --border-color: rgb(68, 68, 68);
   --primary-color: #448aff;
 }
 
 // Light mode
 .light {
   @include mat.all-component-themes($light-theme);
-  --border-color: rgba(0, 0, 0, 0.178);
+  --border-color: rgb(58, 58, 58);
   --primary-color: #448aff;
 }

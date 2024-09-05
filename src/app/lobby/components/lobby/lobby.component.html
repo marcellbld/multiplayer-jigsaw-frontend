@@ -1,13 +1,13 @@
 <app-lobby-nav />
 <div class="container">
-    <app-create-room *ngIf="creatingRoom; else lobby" />
-    <ng-template #lobby>
-      <mat-grid-list cols="1" rowHeight="fit">
-        <mat-grid-tile *ngFor="let room of this.rooms" >
-          <app-lobby-room-block [room]="room"
-          class="py-2" />
+  <app-create-room *ngIf="creatingRoom; else lobby" />
+  <ng-template #lobby>
+    <div class="lobby-rooms">
+      <mat-grid-list cols="3" gutterSize="15px">
+        <mat-grid-tile *ngFor="let room of this.rooms">
+          <app-lobby-room-block [room]="room" class="py-2" />
         </mat-grid-tile>
       </mat-grid-list>
-    </ng-template>
-  </div>
-  
+    </div>
+  </ng-template>
+</div>
