@@ -38,6 +38,9 @@
 
     <div class="image-panel">
       <mat-label for="puzzleImage">Puzzle Image</mat-label>
+      <ng-container *ngIf="!defaultImages || defaultImages.length === 0">
+        <mat-spinner></mat-spinner
+      ></ng-container>
       <mat-grid-list cols="2" rowHeight="55px" gutterSize="5px">
         <mat-grid-tile *ngFor="let image of defaultImages">
           <img

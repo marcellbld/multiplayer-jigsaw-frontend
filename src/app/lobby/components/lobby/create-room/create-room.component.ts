@@ -11,8 +11,9 @@ import { Observable } from 'rxjs';
   styleUrls: ['./create-room.component.scss']
 })
 export class CreateRoomComponent {
-  
+
   defaultImages: File[] = [];
+  defaultImagesLoading: Boolean = false;
 
   puzzleImageFile: File | null = null;
 
@@ -26,22 +27,27 @@ export class CreateRoomComponent {
   submitError: string | null = null;
 
   constructor(private lobbyService: LobbyService, private resourcesService: ResourcesService) {
-    for(let i = 0; i < 7; i++) {
-      resourcesService.getImageAsFile(`assets/default_images/default00${i+1}.jpg`).subscribe((image:File) => {
-        console.log(image);
-        this.defaultImages.push(image);
-      });
-    }
+    // for(let i = 0; i < 7; i++) {
+    //   resourcesService.getImageAsFile(`assets/default_images/default00${i+1}.jpg`).subscribe((image:File) => {
+    //     console.log(image);
+    //     this.defaultImages.push(image);
+    //   });
+    // }
+    this.defaultImagesLoading = true;
+
+    resourcesService.getDefaultImages().subscribe((images: File[]) => {
+      this.defaultImages = images;
+      this.defaultImagesLoading = false;
+    });
   }
 
   onSubmit(): void {
-    if(this.isDataInvalid())
-    {
+    if (this.isDataInvalid()) {
       this.submitError = "Submit failed. Please change the given data."
       return;
     }
-    
-    this.lobbyService.createRoom( {
+
+    this.lobbyService.createRoom({
       pieces: this.pieces.value,
       userCapacity: this.userCapacity.value
     }, this.puzzleImageFile!);
@@ -60,12 +66,12 @@ export class CreateRoomComponent {
   private setPuzzleImage(file: File) {
     this.puzzleImageFile = file;
     console.log(this.puzzleImageFile);
-    
 
-    if(this.puzzleImageFile != null) {
+
+    if (this.puzzleImageFile != null) {
       convertImageToBase64(this.puzzleImageFile, (result: string) => {
         this.puzzleImage.setValue(result);
-        
+
         this.conversionError = null;
       }, (error: string) => {
         this.conversionError = error;
@@ -92,7 +98,7 @@ export class CreateRoomComponent {
       || this.puzzleImage.errors != null || !this.puzzleImage.valid);
   }
 
-  public getUploadedImage(): string{
+  public getUploadedImage(): string {
     return this.puzzleImage.value;
   }
 

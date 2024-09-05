@@ -17,8 +17,22 @@
       </mat-error>
       }
     </mat-form-field>
-    <button mat-raised-button type="submit" color="primary" class="main-btn">
-      Join
+
+    @if (joinError) {
+    <p>
+      <mat-error>{{ joinError }} </mat-error>
+    </p>
+
+    }
+    <button
+      disabled="{{ playerName.errors || !form.valid || isConnecting }}"
+      mat-raised-button
+      type="submit"
+      color="primary"
+      class="main-btn"
+    >
+      <mat-spinner *ngIf="isConnecting" [diameter]="20"></mat-spinner>
+      <ng-container *ngIf="!isConnecting">Join</ng-container>
     </button>
   </form>
 </app-main-panel>
