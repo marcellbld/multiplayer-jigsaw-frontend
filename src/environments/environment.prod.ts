@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://coral-app-bbnns.ondigitalocean.app',
-  wsApiUrl: 'https://coral-app-bbnns.ondigitalocean.app/ws'
+  apiUrl: 'https://5.75.237.174:8080',
+  wsApiUrl: 'https://5.75.237.174:8080/ws'
 };
